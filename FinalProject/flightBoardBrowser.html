@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+
+<!--
+<
+<
+<     UCSCx MEAN Stack Final Project  --  April 2016  --  Wade Woodson
+<     file:  flightBoardBrowser.html  == html client page
+<
+<     After starting the FlightBoard server, launch this HTML page in your browser
+<
+<     The page switches views utilizing the Angular ng-view framework
+<
+<     There are many field in the flights data.
+<     For simplicity, this only displays a few of them, though it includes one field that needs a filter transform.
+<     That angular filter converts the timestamp into a date, as demonstrated in the MEANstack repo.
+<
+<     The Angular module, controller and filter are expected to be in flightBoardClient.js in the same directory
+<
+<     Rather than worry about user's differing paths to the bower_components, this version downloads them from the CDN.
+<
+<
+< -->
+
+<html>
+<head>
+
+<!--
+<link href="../../bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet"/>
+<link href="../../bower_components/bootstrap/dist/css/bootstrap-theme.css" rel="stylesheet"/>
+<script src="../../bower_components/angular/angular.js"></script>
+< -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha256-MfvZlkHCEqatNoGiOXveE8FIwMzZg4W85qfrfIFBfYc= sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ=="
+      crossorigin="anonymous">
+
+<script src="./flightBoardClient.js"></script>
+
+<title>MEANstackFinal - Woodson</title>
+</head>
+
+
+<body ng-app="flightBoard" ng-controller="flightBoardController">
+<div class="container-fluid"></div>
+<h1>FLIGHT BOARD</h1><br><br>
+
+<!--
+<
+<   These first two divs provide a launch screen and an error screen
+<
+<   the buttons call scripts to start data retrieval
+<
+<  -->
+
+<div ng-show="boardView=='welcome'">
+<h3>Welcome to FlightBoard, your interactive flight status report!</h3>
+<br><br>
+<button class="btn btn-primary" ng-click="showCarriers()">Show Carrier List</button><br><br><br><br>
+<h4>   pssst!  i am expecting your server to be at {{serverURL}}<h4>
+</div>
+
+<div ng-show="boardView=='error'">
+<h2> Whoa!  Sorry, that's an error!</h2>
+<h3>Is the server started? (startServer.js) </h3>
+<br><br>
+<button class="btn btn-primary" ng-click="showCarriers()">Show Carrier List</button><br><br><br><br>
+<h4>PS, here is the error message</h4>
+    {{errMsg}}
+</div>
+
+
+<!--
+<
+<   At this point, a series of divs represent the three basic working views of this SinglePage App
+<
+<   the data for the Carriers and Routes views are expected to be in an array of strings
+<   the data for the Flights view are expected to be in a structured object collection
+<
+<   the buttons call scripts to drive navigation
+<
+<  -->
+
+<div ng-show="boardView == 'carriers'">
+    <h3> List of All Carriers </h3><br>
+    <table class="table table-striped table-bordered">
+        <caption>{{carriers.length}} carriers found</caption>
+        <thead>
+            <tr><th></th><th>Carrier</th><th>Select Carrier</th></tr>
+        </thead>
+       <tbody>
+            <tr ng-repeat="carrier in carriers">
+            <th>
+                {{$index+1}}:
+            </th>
+            <th>
+                {{carrier}}
+            </th>
+            <th>
+                <button class="btn btn-info" ng-click="showRoutes($index)">
+                Select
+                </button>
+            </th>
+          </tr>
+      </tbody>
+    </table>
+</div>
+
+
+<div ng-show="boardView == 'routes'">
+    <h3> List of All Routes for {{carriers[selectedCarrierIndex]}}</h3><br>
+    <button class="btn btn-primary" ng-click="showCarriers()">Return to Carrier List</button><br><br>
+    <table class="table table-striped table-bordered">
+        <caption>{{routes.length}} routes found</caption>
+        <thead>
+        <tr><th></th><th>Route</th><th>Select Route</th></tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="route in routes">
+            <th>
+                {{$index+1}}:
+            </th>
+            <th>
+                {{route}}
+            </th>
+            <th>
+                <button class="btn btn-info" ng-click="showFlights($index)">
+                    Select
+                </button>
+            </th>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<!--
+<
+<     This is the div for displaying flight info
+<     There are many fields in the flights data.
+<     For simplicity, this only displays a few of them, though it includes one field that needs a filter transform.
+<
+<     It assumes that the flight JSON files have been cleaned/validated by the server
+<
+< -->
+
+
+<div ng-show="boardView == 'flights'">
+    <h3> List of All Flights for {{carriers[selectedCarrierIndex]}}
+        on Route {{routes[selectedRouteIndex]}}</h3><br>
+    <button class="btn btn-primary" ng-click="showRoutes(-1)">Return to Route List</button>
+    <button class="btn btn-primary" ng-click="showCarriers()">Return to Carrier List</button><br><br>
+    <table class="table table-striped table-bordered">
+        <caption>{{numFlights}} flights found</caption>
+        <thead>
+        <tr><th></th><th>Flight</th><th>Groundspeed</th><th>Altitude</th><th>Heading</th><th>Timestamp</th></tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="flight in flights" >
+            <th>
+                {{$index+1}}:
+            </th>
+            <th>
+                {{flight.ident}}
+            </th>
+            <th>
+                {{flight.groundspeed}}
+            </th>
+            <th>
+                {{flight.altitude}}
+            </th>
+            <th>
+                {{flight.heading}}
+            </th>
+            <th>
+                {{flight.timestamp|dateToTimestamp}}
+            </th>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+
+</body>
+</html>

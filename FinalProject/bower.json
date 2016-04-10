@@ -1,0 +1,21 @@
+{
+  "name": "woodson-final",
+  "description": "ucsc MEAN final project",
+  "main": "flightBoardBrowser.html",
+  "authors": [
+    "Wade Woodson"
+  ],
+  "license": "ISC",
+  "homepage": "/",
+  "moduleType": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+  }
+}

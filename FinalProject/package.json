@@ -1,0 +1,16 @@
+{
+  "name": "woodson-final",
+  "version": "1.0.0",
+  "description": "ucsc MEAN final project",
+  "main": "startServer.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "Wade Woodson",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "express": "^4.13.4",
+    "node": "0.0.0"
+  }
+}
